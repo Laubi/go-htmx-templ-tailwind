@@ -1,0 +1,94 @@
+package views
+
+import "github.com/Laubi/go-htmx-templ-tailwind/internal/persistence"
+import "fmt"
+
+templ Root(title string) {
+    <!doctype html>
+    <html class="h-full" lang="en">
+    <head>
+        <title>{title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👻</text></svg" />
+        <link rel="stylesheet" href="/static/css/style.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+          <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    </head>
+    <body class="flex flex-col h-full font-light bg-neutral-50" >
+        <header id="header" class="bg-indigo-700 text-center p-4 text-white items-center ">
+            <h1 class="text-3xl pacifico-regular">Title</h1>
+        </header>
+
+        <div class="flex flex-1">
+            <main class="border-r border-l flex-1 px-8 py-4">
+                {children...}
+            </main>
+        </div>
+        <footer class="bg-neutral-800 text-white text-sm p-8 text-center">
+        &copy; Your name
+        </footer>
+
+    </body>
+    </html>
+
+}
+
+templ Users(users []persistence.User) {
+    @Root("Users") {
+        <div class="container mx-auto">
+            <h1 class="hidden">Users</h1>
+            <p class="text-3xl mt-4 font-thin">Hello Dev,</p>
+            <p class="font-thin text-gray-600">Simplify you daily coding - focus on the important work</p>
+
+            <div class="w-96 border rounded mx-auto p-6 my-8 bg-white">
+                <h2 class="mb-4 text-xl border-b">New User</h2>
+                <form hx-post="/user/"
+                      hx-target="#user-list"
+                      hx-swap="afterend"
+                      hx-trigger="submit">
+                    <div>
+                        <label for="username" class="sr-only">Username</label>
+                        <input id="username" name="username" type="text" placeholder="Username" class="w-full border px-2"/>
+                    </div>
+                    <div class="mt-2">
+                        <label for="email" class="sr-only">Email</label>
+                        <input id="email" name="email" type="email" placeholder="Email" class="w-full border px-2"/>
+                    </div>
+                    <input
+                        type="submit"
+                        value="Create new user"
+                        class="bg-indigo-700 text-white px-2 py-1 mt-4 hover:bg-indigo-500 cursor-pointer rounded-full active:bg-indigo-800 "/>
+                </form>
+            </div>
+
+
+            <div id="user-list">
+                for _, user := range users {
+                    @User(user)
+                }
+            </div>
+        </div>
+    }
+}
+
+templ User(user persistence.User) {
+
+    <div class="user group border p-2 flex flex-row items-center pointer-events-none transition-all rounded mb-2 bg-white duration-300 ease-linear" >
+        <img src={gravatarImage(user.Email)} alt="{user.Username} user-image" class="h-8 w-8 mr-4" />
+        <div>{user.Username}</div>
+
+        <span
+          hx-delete={deleteUrl(user)}
+          hx-target="closest .user"
+          hx-swap="outerHTML swap:1s"
+          class="pointer-events-auto text-center text-sm size-8 mr-4 ml-auto text-red-600 border border-red-600 p-1 rounded-full hover:bg-red-600 hover:text-white transition-all cursor-pointer">
+            <i class="fa fa-trash"></i>
+        </span>
+    </div>
+}
+
+func deleteUrl(user persistence.User) string {
+    return fmt.Sprintf("/user/%d", user.ID)
+}

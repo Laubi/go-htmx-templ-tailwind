@@ -1,0 +1,13 @@
+# Build files
+/dist
+/tmp
+
+# Generated files
+static/css/style.css
+*_templ.go
+
+# Application files
+database.db
+
+# IDE files
+.idea

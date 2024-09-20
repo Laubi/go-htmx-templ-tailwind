@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pacifico-regular {
+    font-family: "Pacifico", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.user {
+    background: linear-gradient(to left, white 50%, var(--color-red-50) 50%) right;
+    background-size: 200%;
+}
+
+.user:hover {
+    background-position: left;
+}
+
+.user.htmx-swapping {
+    opacity: 0;
+}
