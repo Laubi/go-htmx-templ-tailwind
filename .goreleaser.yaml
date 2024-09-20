@@ -29,6 +29,7 @@ kos:
   - 'linux/amd64'
   tags:
   - "{{.Version}}"
+  - latest
   labels:
     org.opencontainers.image.source: "https://github.com/Laubi/go-htmx-templ-tailwind"
 
