@@ -12,9 +12,6 @@ import (
 	"github.com/Laubi/go-htmx-templ-tailwind/internal/views"
 )
 
-//go:embed static
-var staticAssets embed.FS
-
 func main() {
 	err := persistence.ConnectToDb()
 	if err != nil {
@@ -22,6 +19,20 @@ func main() {
 	}
 	defer persistence.CloseDb()
 
+	mux := routes()
+
+	port := cmp.Or(os.Getenv("PORT"), "8080")
+	slog.Info("starting server", "port", port)
+	err = http.ListenAndServe(":"+port, mux)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//go:embed static
+var staticAssets embed.FS
+
+func routes() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("GET /static/", http.FileServer(http.FS(staticAssets)))
 
@@ -78,10 +89,5 @@ func main() {
 
 	})
 
-	port := cmp.Or(os.Getenv("PORT"), "8080")
-	slog.Info("starting server", "port", port)
-	err = http.ListenAndServe(":"+port, mux)
-	if err != nil {
-		panic(err)
-	}
+	return mux
 }
