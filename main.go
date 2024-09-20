@@ -2,6 +2,7 @@ package main
 
 import (
 	"cmp"
+	"embed"
 	"log/slog"
 	"net/http"
 	"os"
@@ -11,6 +12,9 @@ import (
 	"github.com/Laubi/go-htmx-templ-tailwind/internal/views"
 )
 
+//go:embed static
+var staticAssets embed.FS
+
 func main() {
 	err := persistence.ConnectToDb()
 	if err != nil {
@@ -19,8 +23,7 @@ func main() {
 	defer persistence.CloseDb()
 
 	mux := http.NewServeMux()
-
-	mux.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("static"))))
+	mux.Handle("GET /static/", http.FileServer(http.FS(staticAssets)))
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		users, err := persistence.GetAllUsers()
