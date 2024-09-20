@@ -24,6 +24,7 @@ kos:
 - build: go-htmx-templ-tailwind
   repository: 'ghcr.io/laubi/go-htmx-templ-tailwind'
   bare: true
+  base_image: alpine:3.14
   platforms:
   - 'linux/arm64'
   - 'linux/amd64'
