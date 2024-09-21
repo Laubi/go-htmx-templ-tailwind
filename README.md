@@ -29,10 +29,10 @@ Execute the following commands in parallel:
 ### GitHub
 GitHub integrations are provided with two workflows.
 
-#### [integration.yaml](./github/workflows/integration.yaml)
+#### [integration.yaml](./.github/workflows/integration.yaml)
 Executes tests & vets all pushes.
 
-#### [release.yaml](./github/workflows/release.yaml)
+#### [release.yaml](./.github/workflows/release.yaml)
 Used to create releases. The pipeline is run on every push. If no tag is present, the release is not performed but validated.
 If a tag in the form of `v*` is present, a GitHub release is created, as well as the Docker images are created and pushed.
 
